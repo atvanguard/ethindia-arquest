@@ -12,6 +12,7 @@ app.store(async (state, event) => {
     case 'Increment':
       return { count: await getValue() }
     case 'Decrement':
+      console.log('here')
       return { count: await getValue() }
     default:
       return state
@@ -28,3 +29,14 @@ function getValue() {
       .subscribe(resolve)
   })
 }
+
+module.exports = app;
+
+// app.events()
+// .on('data', function(event){
+//   console.log(event); // same results as the optional callback above
+// })
+// .on('changed', function(event){
+//   // remove event from local database
+// })
+// .on('error', console.error);

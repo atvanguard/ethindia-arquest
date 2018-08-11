@@ -3,12 +3,12 @@ pragma solidity ^0.4.4;
 import "@aragon/os/contracts/apps/AragonApp.sol";
 import "@aragon/os/contracts/lib/zeppelin/math/SafeMath.sol";
 
-contract Invoices is AragonApp {
+contract InvoiceApp is AragonApp {
     using SafeMath for uint256;
 
     /// Events
     event Increment(address indexed entity, uint256 step);
-    event Decrement(address indexed entity, uint256 step);
+    event Decrement(uint256 step);
     event CreatePaymentRequest(string data);
 
     /// State
@@ -27,16 +27,21 @@ contract Invoices is AragonApp {
         Increment(msg.sender, step);
     }
 
-    function CreatePaymentRequest(string data) {
-      emit CreatePaymentRequest(data);
+    /**
+     * @notice Create Payment Request of `amount` for `payer`
+     * @param payer payer
+     */
+    function createPaymentRequest(string payer, uint256 amount) auth(INCREMENT_ROLE) external {
+      CreatePaymentRequest(payer);
+      // Increment(msg.sender, 1);
     }
 
     /**
      * @notice Decrement the counter by `step`
      * @param step Amount to decrement by
      */
-    function decrement(uint256 step) auth(DECREMENT_ROLE) external {
-        value = value.sub(step);
-        Decrement(msg.sender, step);
+    function decrement(uint256 step) external {
+        value = value.add(step);
+        Decrement(step);
     }
 }

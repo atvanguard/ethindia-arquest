@@ -22,13 +22,8 @@ export default class App extends React.Component {
       <AppContainer>
         <div>
           <ObservedCount observable={this.props.observable} />
-          <Button onClick={() => this.props.app.decrement(1)}>Decrement</Button>
-          <Button onClick={() => this.props.app.increment(1)}>Increment</Button>
-        </div>
-        <div>
-          <AppBar title="Your Aragon App">
-          {/* Your AppBar's content goes here */}
-          </AppBar>
+          <Button onClick={() => this.props.app.decrement(2)}>Decrement</Button>
+          <Button onClick={() => this.props.app.createPaymentRequest('Meet', 789)}>Create Payment</Button>
         </div>
       </AppContainer>
     )
