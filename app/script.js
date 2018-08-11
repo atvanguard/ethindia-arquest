@@ -3,7 +3,8 @@ import Aragon from '@aragon/client'
 const app = new Aragon()
 
 const initialState = {
-  count: 0
+  count: 0,
+  address: 0
 }
 app.store(async (state, event) => {
   if (state === null) state = initialState
@@ -12,7 +13,8 @@ app.store(async (state, event) => {
     case 'Increment':
       return { count: await getValue() }
     case 'Decrement':
-      console.log('here')
+      console.log('yoyo')
+      console.log(event)
       return { count: await getValue() }
     default:
       return state

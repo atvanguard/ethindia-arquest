@@ -7,7 +7,7 @@ var web3 = new Web3("ws://localhost:8545");
 // console.dir(contractArtifact.abi, {depth: null});
 
 var myContract = new web3.eth.Contract(InvoiceApp.abi,
-  '0xdc6a990f5b35c10cd1dc1f07ea38dc843e7ae1a9',
+  '0x37c83f24dd62ea167ef45bf2f6f99cd8f7a17d7f',
   {
     from: '0x1234567890123456789012345678901234567891', // default from address
     gasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
