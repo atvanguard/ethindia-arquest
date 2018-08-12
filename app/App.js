@@ -4,28 +4,38 @@ import {
   Button,
   Text,
   AppBar,
-  observe
+  observe,
+  AppView,
+  ContextMenu, ContextMenuItem,
+  Table, TableHeader, TableRow, TableCell,
+  SidePanel
 } from '@aragon/ui'
-
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import Aragon, { providers } from '@aragon/client'
 import styled from 'styled-components'
+import InvoiceSummary from './components/InvoiceSummary';
 
 const AppContainer = styled(AragonApp)`
   display: flex;
   align-items: center;
   justify-content: center;
 `
+class CreatePayment extends React.Component {
+  render () {
+    return (
+      <Button mode="strong">Create Payment</Button>
+    )
+  }
+}
 
 export default class App extends React.Component {
   render () {
+    var rows = [{id: 'paymentId', status: 'Pending'}, {id: 'paymentId2', status: 'Accepted'}];
     return (
-      <AppContainer>
-        <div>
-          <ObservedCount observable={this.props.observable} />
-          <Button onClick={() => this.props.app.decrement(2)}>Decrement</Button>
-          <Button onClick={() => this.props.app.createPaymentRequest('Meet', 789)}>Create Payment</Button>
-        </div>
-      </AppContainer>
+      <AragonApp className="app">
+        <AppBar title="Invoices" endContent={<CreatePayment />} />
+        <InvoiceSummary rows={rows}/>
+      </AragonApp>
     )
   }
 }

@@ -5,6 +5,10 @@ const app = new Aragon()
 const initialState = {
   count: 0,
 }
+
+const initialState2 = {
+  payments : [{id: 'paymentId', state: 'Pending'}]
+}
 app.store(async (state, event) => {
   if (state === null) state = initialState
 
