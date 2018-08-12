@@ -7,22 +7,38 @@ const initialState = {
 }
 
 const initialState2 = {
-  payments : [{id: 'paymentId', state: 'Pending'}]
+  payments : [{id: 'dummypaymentId', state: 'Pending'}]
 }
 app.store(async (state, event) => {
-  if (state === null) state = initialState
-
+  if (state === null) state = initialState2
+  console.log('state', state)
+  let rows = state.rows || [];
+  let params = event.returnValues;
   switch (event.event) {
-    case 'PaymentCreated':
+    case 'DummyEvent':
+      console.log('DummyEvent', event)
       return state;
-    case 'PaymentFulfilled':
+    case 'CreatePaymentRequest':
+      console.log('in CreatePaymentRequest')
+      rows.push({id: params.id, payer: params.payer, amount: params.amount, status: 'Pending'});
+      return {rows}
+    case 'FulfilledPayments':
+      console.log('in FulfilledPayments');
+      console.log(event)
+      console.log(state.rows, state.rows[0]);
+      var state = {rows: [{id: "0", payer: "0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb", amount: "185", status: "Pending"}]}
+      for(let i = 0; i < state.rows.length; i++) {
+        console.log('in loop')
+        console.log(state.rows[i]);
+        console.log(parseInt(state.rows[i].id))
+        console.log('in loop 2')
+        console.log(params.payments)
+        console.log('in loop 3')
+        if (params.payments[parseInt(state.rows[i].id)] == '1') {
+          state.rows[i].status = 'Fulfilled';
+        }
+      }
       return state;
-    // case 'Increment':
-    //   return { count: await getValue() }
-    // case 'Decrement':
-    //   console.log('yoyo')
-    //   console.log(event)
-    //   return { count: await getValue() }
     default:
       return state
   }

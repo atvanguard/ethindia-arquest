@@ -7,7 +7,7 @@ var web3 = new Web3("ws://localhost:8545");
 // var web3 = new Web3(provider);
 
 var requestNetworkClient = new RequestNetworkClient(provider, '8989');
-contractAddress = '0x3b5DBc19E83FF13fCaB2F6E547A2bF9cb4802564';
+contractAddress = '0x82C0d16D7C6cF5b4aAf819f802A2294748b0D57c';
 requestNetworkContractAddress = '0x35E415382647Ea72372EB02190c968eaa119A973';
 
 var myContract = new web3.eth.Contract(
@@ -15,11 +15,11 @@ var myContract = new web3.eth.Contract(
   contractAddress
 );
 
-myContract.events.CreatePaymentRequest({}, function(error, event){ console.log(event); })
+myContract.events.CreatePaymentRequestBackend({}, function(error, event){ console.log(event); })
 // myContract.getPastEvents("allEvents", {}, function(error, event){ console.log(event); })
 .on('data', async function(event){
   // event = events[0];
-  console.log('in CreatePaymentRequest event handler');
+  console.log('in CreatePaymentRequestBackend event handler');
   console.log(event); // same results as the optional callback above
   // d = web3.eth.abi.decodeParameters(['string', 'uint256'], event.raw.data);
   // var d = web3.eth.abi.decodeLog([{type: 'string'}, {type: 'uint256'}], event.raw.data, event.raw.topics);
@@ -37,7 +37,7 @@ myContract.events.CreatePaymentRequest({}, function(error, event){ console.log(e
   console.dir(r, {depth: null});
   console.log('setting request ID');
 
-  await myContract.methods.setRequestId(r.request.requestId).send({
+  await myContract.methods.setRequestId(event.returnValues.id, r.request.requestId).send({
     from: '0x306469457266CBBe7c0505e8Aad358622235e768'
   });
 
@@ -89,4 +89,9 @@ reqCoreContract.events.Accepted({}, function(error, event){ console.log(event); 
   await myContract.methods.paymentFulfilled(event.returnValues.requestId).send({
     from: '0x306469457266CBBe7c0505e8Aad358622235e768'
   });
+})
+
+myContract.events.FulfilledPayments({}, function(error, event){ console.log(event); })
+.on('data', async function(event){
+  console.log(event);
 })

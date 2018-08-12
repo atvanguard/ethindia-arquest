@@ -9,14 +9,24 @@ contract InvoiceApp is AragonApp {
     /// Events
     event Increment(address indexed entity, uint256 step);
     event Decrement(uint256 step);
-    event CreatePaymentRequest(string payer, uint256 amount);
+    event CreatePaymentRequest(uint256 id, string payer, uint256 amount);
+    event CreatePaymentRequestBackend(uint256 id, string payer, uint256 amount);
     event PaymentCreated(bytes32 requestId);
     event PaymentFulfilled(bytes32 requestId);
+    event DummyEvent();
+    event FulfilledPayments(uint256[] payments);
 
-    enum State { Created, Accepted, Canceled }
-    mapping(bytes32 => State) public status;
+    enum State { Created, Fulfilled, Canceled }
+
+    struct Details {
+      bytes32 requestId;
+      State state;
+    }
+
+    mapping(uint256 => Details) public status;
     /// State
     uint256 public value;
+    uint256 public id;
 
     /// ACL
     bytes32 constant public INCREMENT_ROLE = keccak256("INCREMENT_ROLE");
@@ -31,22 +41,42 @@ contract InvoiceApp is AragonApp {
         Increment(msg.sender, step);
     }
 
+    function dummyEvent() public {
+      DummyEvent();
+    }
+
     /**
      * @notice Create Payment Request of `amount` for `payer`
      * @param payer payer
      */
-    function createPaymentRequest(string payer, uint256 amount) auth(INCREMENT_ROLE) external {
-      CreatePaymentRequest(payer, amount);
+    function createPaymentRequest(string payer, uint256 amount) external {
+      CreatePaymentRequest(id, payer, amount);
+      CreatePaymentRequestBackend(id++, payer, amount);
       // Increment(msg.sender, 1);
     }
 
-    function setRequestId(bytes32 _requestId) external {
-      status[_requestId] = State.Created;
+    function setRequestId(uint256 id, bytes32 _requestId) external {
+      status[id].requestId = _requestId;
+      status[id].state = State.Created;
       PaymentCreated(_requestId);
     }
 
+    function refresh() public {
+      uint256[] memory fulfilledPayments = new uint256[](id);
+      for (uint i = 0; i < id; i++) {
+        if (status[i].state == State.Fulfilled) {
+          fulfilledPayments[i] = 1;
+        }
+      }
+      FulfilledPayments(fulfilledPayments);
+    }
+
     function paymentFulfilled(bytes32 _requestId) external {
-      status[_requestId] = State.Accepted;
+      for (uint i = 0; i < id; i++) {
+        if (status[i].requestId == _requestId) {
+          status[i].state = State.Fulfilled;
+        }
+      }
       PaymentFulfilled(_requestId);
     }
 
