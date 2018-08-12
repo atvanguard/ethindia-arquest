@@ -9,8 +9,12 @@ contract InvoiceApp is AragonApp {
     /// Events
     event Increment(address indexed entity, uint256 step);
     event Decrement(uint256 step);
-    event CreatePaymentRequest(string data);
+    event CreatePaymentRequest(string payer, uint256 amount);
+    event PaymentCreated(bytes32 requestId);
+    event PaymentFulfilled(bytes32 requestId);
 
+    enum State { Created, Accepted, Canceled }
+    mapping(bytes32 => State) public status;
     /// State
     uint256 public value;
 
@@ -32,8 +36,18 @@ contract InvoiceApp is AragonApp {
      * @param payer payer
      */
     function createPaymentRequest(string payer, uint256 amount) auth(INCREMENT_ROLE) external {
-      CreatePaymentRequest(payer);
+      CreatePaymentRequest(payer, amount);
       // Increment(msg.sender, 1);
+    }
+
+    function setRequestId(bytes32 _requestId) external {
+      status[_requestId] = State.Created;
+      PaymentCreated(_requestId);
+    }
+
+    function paymentFulfilled(bytes32 _requestId) external {
+      status[_requestId] = State.Accepted;
+      PaymentFulfilled(_requestId);
     }
 
     /**

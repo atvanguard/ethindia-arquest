@@ -1,63 +1,92 @@
-// const contractArtifact = artifacts.require('InvoiceApp');
 var InvoiceApp = require('../build/contracts/InvoiceApp.json');
+var RequestNetworkClient = require('./request-payments');
 var Web3 = require('web3');
+
+var provider = new Web3.providers.HttpProvider('http://localhost:8545')
 var web3 = new Web3("ws://localhost:8545");
-// console.log(Object.keys(contractArtifact));
-// console.dir(contractArtifact, {depth: null});
-// console.dir(contractArtifact.abi, {depth: null});
+// var web3 = new Web3(provider);
 
-var myContract = new web3.eth.Contract(InvoiceApp.abi,
-  '0x37c83f24dd62ea167ef45bf2f6f99cd8f7a17d7f',
-  {
-    from: '0x1234567890123456789012345678901234567891', // default from address
-    gasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
-});
+var requestNetworkClient = new RequestNetworkClient(provider, '8989');
+contractAddress = '0x3b5DBc19E83FF13fCaB2F6E547A2bF9cb4802564';
+requestNetworkContractAddress = '0x35E415382647Ea72372EB02190c968eaa119A973';
 
-// myContract.methods.getCreatePaymentRequest((error, result) => {
-//   console.log('here', error, result);
-// })
-
-// var f1 = web3.eth.filter(myContract);
-// // var f1 = myContract.CreatePaymentRequest();
-// function trigger() {
-//   console.log('here');
-// }
-// f1.watch(trigger);
-
-// myContract.CreatePaymentRequest().watch((error, event) => { console.log(event); })
-// var event = myContract.allEvents().watch({}, '');
-//     // or use conference.Deposit() or .Refund()
-//     event.watch(function (error, result) { 
-//       if (error) {
-//         console.log("Error: " + error);
-//       } else {
-//         console.log("Event: " + result.event);
-//     }
-//   })
+var myContract = new web3.eth.Contract(
+  InvoiceApp.abi,
+  contractAddress
+);
 
 myContract.events.CreatePaymentRequest({}, function(error, event){ console.log(event); })
-.on('data', function(event){
+// myContract.getPastEvents("allEvents", {}, function(error, event){ console.log(event); })
+.on('data', async function(event){
+  // event = events[0];
+  console.log('in CreatePaymentRequest event handler');
   console.log(event); // same results as the optional callback above
+  // d = web3.eth.abi.decodeParameters(['string', 'uint256'], event.raw.data);
+  // var d = web3.eth.abi.decodeLog([{type: 'string'}, {type: 'uint256'}], event.raw.data, event.raw.topics);
+  // console.log('params', d, 'payer', d[0], 'amount', d[1]);
+  console.log(event.returnValues);
+  // const payer = d[0];
+  var r = await requestNetworkClient.generatePaymentRequestLink(
+    // ['0xb4124cEB3451635DAcedd11767f004d8a28c6eE7', contractAddress],
+    // ['0', web3.utils.toWei(event.returnValues.amount, 'ether')],
+    ['0xb4124cEB3451635DAcedd11767f004d8a28c6eE7'],
+    ['185000000000000000'],
+    // event.returnValues.payer,
+    '0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb'
+  );
+  console.dir(r, {depth: null});
+  console.log('setting request ID');
+
+  await myContract.methods.setRequestId(r.request.requestId).send({
+    from: '0x306469457266CBBe7c0505e8Aad358622235e768'
+  });
+
+  // const signedRequest = r.request;
+  // const signedRequest = r;
+  // const qs = JSON.stringify({
+  //   signedRequest: signedRequest,
+  //   callbackUrl: 'https://rinkeby.etherscan.io/tx/', // redirect to rinkeby tx page
+  //   networkId: '8989'});
+  // const qsBase64 = Buffer.from(qs).toString('base64')
+  // const qsb64Encoded = encodeURIComponent(qsBase64);
+  // console.log('https://app.request.network/#/pay-with-request/' + qsb64Encoded);
 })
 .on('changed', function(event){
   // remove event from local database
 })
 .on('error', console.error);
 
-myContract.events.Decrement({}, function(error, event){ console.log(event); })
-.on('data', function(event){
-  console.log(event); // same results as the optional callback above
+myContract.events.PaymentCreated({}, function(error, event){ console.log(event); })
+// myContract.getPastEvents("allEvents", {}, function(error, event){ console.log(event); })
+.on('data', async function(event){
+  // event = events[0];
+  console.log('in PaymentCreated event handler');
+  console.log(event);
 })
-.on('changed', function(event){
-  // remove event from local database
+
+myContract.events.PaymentFulfilled({}, function(error, event){ console.log(event); })
+// myContract.getPastEvents("allEvents", {}, function(error, event){ console.log(event); })
+.on('data', async function(event){
+  // event = events[0];
+  console.log('in paymentFulfilled event handler');
+  console.log(event);
 })
-.on('error', console.error);
-// myContract.methods.CreatePaymentRequest('123', 123).call();
-// myContract.CreatePaymentRequest({}, function(error, event){ console.log(event); })
-// .on('data', function(event){
-//   console.log(event); // same results as the optional callback above
-// })
-// .on('changed', function(event){
-//   // remove event from local database
-// })
-// .on('error', console.error);
+
+const requestNetworkArtifacts = require('requestNetworkArtifacts');
+var artifact = requestNetworkArtifacts.default('private', requestNetworkContractAddress);
+// console.log(artifact);
+var reqCoreContract = new web3.eth.Contract(
+  artifact.abi,
+  requestNetworkContractAddress
+);
+
+reqCoreContract.events.Accepted({}, function(error, event){ console.log(event); })
+// myContract.getPastEvents("allEvents", {}, function(error, event){ console.log(event); })
+.on('data', async function(event) {
+  console.log('in Accepted event handler');
+  console.log(event);
+  // propagate this to InvoiceApp
+  await myContract.methods.paymentFulfilled(event.returnValues.requestId).send({
+    from: '0x306469457266CBBe7c0505e8Aad358622235e768'
+  });
+})

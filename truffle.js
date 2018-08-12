@@ -9,7 +9,7 @@ module.exports = {
       // provider: () => {
       //   return new HDWalletProvider('candy maple cake sugar pudding cream honey rich smooth crumble sweet treat', "http://localhost:8545");
       // },
-      network_id: '*'
+      network_id: '8989'
     }
   }
 }
