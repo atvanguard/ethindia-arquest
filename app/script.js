@@ -26,7 +26,7 @@ app.store(async (state, event) => {
       console.log('in FulfilledPayments');
       console.log(event)
       console.log(state.rows, state.rows[0]);
-      var state = {rows: [{id: "0", payer: "0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb", amount: "185", status: "Pending"}]}
+      // var state = {rows: [{id: "0", payer: "0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb", amount: "185", status: "Pending"}]}
       for(let i = 0; i < state.rows.length; i++) {
         console.log('in loop')
         console.log(state.rows[i]);

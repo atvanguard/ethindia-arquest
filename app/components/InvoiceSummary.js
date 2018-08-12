@@ -32,7 +32,7 @@ class ObjectRow extends React.Component {
             <Text>{this.props.id}</Text>
         </TableCell>
         <TableCell>
-        <Badge.Identity>{this.props.payer}</Badge.Identity>
+        <Text>{this.props.payer}</Text>
         </TableCell>
         <TableCell>
             {
@@ -56,34 +56,6 @@ class ObjectRow extends React.Component {
   }
 }
 
-// export default class InvoiceSummary extends React.Component {
-//   // constructor() {
-//   //   super();
-//   //   this.state = {
-//   //     rows: [{id: 'paymentId', status: 'Pending'}, {id: 'paymentId2', status: 'Accepted'}]
-//   //   };
-//   // }
-//   render () {
-//     var rows = [];
-//     for (var i = 0; i < this.props.rows.length; i++) {
-//         var row = this.props.rows[i];
-//         rows.push(<ObjectRow key={i} id={row.id} status={row.status} />);
-//     }
-//     return (
-      
-//               <Table
-//                     header={
-//                       <TableRow>
-//                         <TableHeader title="Invoices" />
-//                       </TableRow>
-//                     }
-//               >
-//                   {rows}
-//               </Table>
-//     )
-//   }
-// }
-
 export default class InvoiceSummary extends React.Component {
   render () {
     var rows = [];
@@ -95,13 +67,17 @@ export default class InvoiceSummary extends React.Component {
     return (
       
               <Table
-                    header={
-                      <TableRow>
-                        <TableHeader title="Invoices" />
-                      </TableRow>
-                    }
+                header={
+                  <TableRow>
+                    <TableHeader title="ID" />
+                    <TableHeader title="Payer" />
+                    <TableHeader title="Status" />
+                    <TableHeader title="Amount" />
+                    <TableHeader title="Invoice" />
+                  </TableRow>
+                }
               >
-                  {rows}
+                {rows}
               </Table>
     )
   }

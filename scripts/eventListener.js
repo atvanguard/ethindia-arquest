@@ -7,7 +7,7 @@ var web3 = new Web3("ws://localhost:8545");
 // var web3 = new Web3(provider);
 
 var requestNetworkClient = new RequestNetworkClient(provider, '8989');
-contractAddress = '0x82C0d16D7C6cF5b4aAf819f802A2294748b0D57c';
+contractAddress = '0x106F295eBf92288a908a6AA6E7275BAc87a65c51';
 requestNetworkContractAddress = '0x35E415382647Ea72372EB02190c968eaa119A973';
 
 var myContract = new web3.eth.Contract(
@@ -24,15 +24,18 @@ myContract.events.CreatePaymentRequestBackend({}, function(error, event){ consol
   // d = web3.eth.abi.decodeParameters(['string', 'uint256'], event.raw.data);
   // var d = web3.eth.abi.decodeLog([{type: 'string'}, {type: 'uint256'}], event.raw.data, event.raw.topics);
   // console.log('params', d, 'payer', d[0], 'amount', d[1]);
-  console.log(event.returnValues);
+  // console.log(event.returnValues);
+  let params = event.returnValues;
   // const payer = d[0];
   var r = await requestNetworkClient.generatePaymentRequestLink(
     // ['0xb4124cEB3451635DAcedd11767f004d8a28c6eE7', contractAddress],
     // ['0', web3.utils.toWei(event.returnValues.amount, 'ether')],
     ['0xb4124cEB3451635DAcedd11767f004d8a28c6eE7'],
-    ['185000000000000000'],
+    [params.amount],
+    // ['185000000000000000'],
     // event.returnValues.payer,
-    '0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb'
+    // '0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb'
+    params.payer
   );
   console.dir(r, {depth: null});
   console.log('setting request ID');
