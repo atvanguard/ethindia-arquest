@@ -7,7 +7,7 @@ var web3 = new Web3("ws://localhost:8545");
 // var web3 = new Web3(provider);
 
 var requestNetworkClient = new RequestNetworkClient(provider, '8989');
-contractAddress = '0x106F295eBf92288a908a6AA6E7275BAc87a65c51';
+contractAddress = '0x172615442a363404FE4CABF12eE7dfe5ED503521';
 requestNetworkContractAddress = '0x35E415382647Ea72372EB02190c968eaa119A973';
 
 var myContract = new web3.eth.Contract(

@@ -1,34 +1,7 @@
-# Aragon React Boilerplate
+# ArQuest
+Create smart invoices for your Decentralized Autonomous Organization (DAO). Built on [Aragon](https://aragon.org/) and [Request Network](https://request.network/#/).
 
-> 🕵️ [Find more boilerplates using GitHub](https://github.com/search?q=topic:aragon-boilerplate) | 
-> ✨ [Official boilerplates](https://github.com/search?q=topic:aragon-boilerplate+org:aragon)
-
-React boilerplate for Aragon applications.
-
-This boilerplate also includes a fully working example app, complete with a background worker and a front-end in React (with Aragon UI).
-
-## Usage
-
-```sh
-aragon init foo.aragonpm.test react
-```
-
-## Prerequisites
-
-- [**truffle**](https://github.com/trufflesuite/truffle): Used to build and test the contracts
-
-## What's in the box?
-
-### npm Scripts
-
-- **start**: Run the app locally
-- **compile**: Compile the smart contracts
-- **build**: Compiles the contracts and builds the front-end
-- **test**: Runs tests for the contracts
-- **publish**: Builds the apps and the contracts and publishes them to IPFS and APM
-
-### Libraries
-
-- [**@aragon/os**](https://github.com/aragon/aragonos): Aragon interfaces
-- [**@aragon/client**](https://github.com/aragon/aragon.js/tree/master/packages/aragon-client): Wrapper for Aragon application RPC
-- [**@aragon/ui**](https://github.com/aragon/aragon-ui): Aragon UI components (in React)
+#### [Winners](https://twitter.com/ethindiaco/status/1028662830482972672) at [ETHIndia](https://twitter.com/ethindiaco) 2018.
+1. [Proposal](https://github.com/Blockternship/projects/issues/11)
+2. [Demo Video](https://www.youtube.com/watch?v=E0p5Bjhkb30&feature=youtu.be)
+3. [Slides](https://docs.google.com/presentation/d/1OsjtKBIBZB1IhTmNqML_cG1Yafde0JmXLEfHKiOIu78/edit?usp=sharing)
