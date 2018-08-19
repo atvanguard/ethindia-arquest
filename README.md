@@ -5,3 +5,7 @@ Create smart invoices for your Decentralized Autonomous Organization (DAO). Buil
 1. [Proposal](https://github.com/Blockternship/projects/issues/11)
 2. [Demo Video](https://www.youtube.com/watch?v=E0p5Bjhkb30&feature=youtu.be)
 3. [Slides](https://docs.google.com/presentation/d/1OsjtKBIBZB1IhTmNqML_cG1Yafde0JmXLEfHKiOIu78/edit?usp=sharing)
+4. [Blog Post](https://medium.com/@atvanguard/ethindia-hackathon-ffe56c096673)
+5. [Submission](https://devfolio.co/submissions/arquest)
+
+The DApp is now being developed [here](https://github.com/Blockternship/arquest).
